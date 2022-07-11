@@ -191,10 +191,10 @@ GreenList and GBIF do not use the same taxonomy.
 
 ![](images/japan_maps.png){.absolute top=40 left=120 height="650"}
 
-## Unmatched names in GBIF data likely artifacts
+## Unmatched names in GBIF likely artifacts
 
 Of 1,092 species (331,453 occurrences) in GBIF data,  
-**770** names resolved (302,985 occurrences) to names in Green List
+**770** names resolved (302,985 occ.) to names in Green List
 
 | Match type | *n* |
 | ---------- | --- |
@@ -203,7 +203,6 @@ Of 1,092 species (331,453 occurrences) in GBIF data,
 | Missing author | 22 |
 | Taxonomic rule | 20 |
 | Fuzzy match | 16 |
-| TOTAL | 770 |
 
 # Summary
 
