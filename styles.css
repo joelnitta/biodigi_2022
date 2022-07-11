@@ -1,0 +1,15 @@
+.small {
+  font-size: 40%;
+}
+
+.medium {
+  font-size: 80%;
+}
+
+.normal {
+  font-size: 100%;
+}
+
+.center {
+  text-align: center;
+}

@@ -1,0 +1,219 @@
+---
+format:
+  revealjs:
+    slide-level: 2
+    bibliography: references.yaml
+    csl: ecology.csl
+    reference-location: document
+    css: styles.css
+    slide-number: true
+    self-contained: true
+---
+
+```{r}
+#| label: setup
+#| include: false
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+library(taxastand)
+library(tidyverse)
+options(ts_tbl_out = TRUE)
+```
+
+# Introduction {visibility="hidden"}
+
+## Resolving species names rapidly and accurately with `taxastand`
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+:::: {.medium}
+**Joel Nitta<sup>1</sup>**, Wataru Iwasaki<sup>1</sup>
+::::
+
+:::: {.small}
+1: The University of Tokyo
+Botany 2022  
+[https://joelnitta.github.io/botany_2022_taxastand](https://joelnitta.github.io/botany_2022_taxastand)
+::::
+
+:::
+
+::: {.column width="50%"}
+:::
+
+::::
+
+## Species names are the "glue" that connect datasets
+
+::: {.center}
+![](images/fig-1-full.png){height="450"}
+:::
+
+::: {.medium}
+@Page2013
+:::
+
+## Synonyms break linkages
+
+![](images/synonyms.png){.absolute top=200 left=50 height="120"}
+
+## In the age of big data, software is needed to resolve taxonomy
+
+![](images/gbif.png)
+
+::: {.aside .medium}
+https://www.gbif.org/
+:::
+
+## Shortcomings of current approaches
+
+- Many tools only available via an online interface (API)
+  - **Difficult to reproduce**
+- Limited number of reference databases to choose from
+  - **May not be able to implement taxonomy of choice**
+- Existing tools do not recognize the rules of taxonomic nomenclature
+  - **May not be able to accurately match names**
+
+## Features of `taxastand`
+
+- Run **locally** in R
+- Allows usage of a **custom reference database**
+- Supports **fuzzy matching**
+- Understands **taxonomic rules**
+
+Available at [https://github.com/joelnitta/taxastand](https://github.com/joelnitta/taxastand)
+
+:::{.aside}
+Thanks to Cam Webb and [taxon-tools](https://github.com/camwebb/taxon-tools).
+
+Check out the taxon-tools [poster at Botany 2020](http://alaskaflora.org/files/webb_BSA2020.pdf)
+:::
+
+# Usage
+
+## Installation
+
+In R:
+
+```{r}
+#| label: install
+#| eval: false
+# install remotes first
+install.packages("remotes")
+remotes::install_github("joelnitta/taxastand")
+library(taxastand)
+```
+
+Also, need to either install [`taxon-tools`](https://github.com/camwebb/taxon-tools) or Docker
+
+## Basic matching: fuzzy matching
+
+```{r}
+#| label: basic-matching-fuzzy
+res <- ts_match_names(
+    query = "Crepidomanes minutus",
+    reference = c(
+      "Crepidomanes minutum",
+      "Hymenophyllum polyanthos"),
+    simple = TRUE,
+    docker = TRUE
+    )
+glimpse(res)
+```
+
+## Basic matching: taxonomic rules
+
+```{r}
+#| label: basic-matching-rules
+res <- ts_match_names(
+    query = "Crepidomanes minutum K. Iwats.",
+    reference = c(
+      "Crepidomanes minutum (Bl.) K. Iwats.",
+      "Hymenophyllum polyanthos (Sw.) Sw."),
+    simple = TRUE,
+    docker = TRUE
+    )
+glimpse(res)
+```
+
+## For name resolution, need a reference database
+
+```{r}
+#| label: load-data
+data(filmy_taxonomy)
+head(filmy_taxonomy[c("taxonID", "acceptedNameUsageID",
+  "taxonomicStatus", "scientificName")])
+```
+
+## Where to get taxonomic data?
+
+- Any dataframe following [Darwin Core standards](https://dwc.tdwg.org/)
+  - [Catalog of Life](http://www.catalogueoflife.org/)
+  - [GBIF](https://www.gbif.org/en/dataset/d7dddbf4-2cf0-4f39-9b2a-bb099caae36c)
+  - [ITIS](https://www.itis.gov/)
+  - [pteridocat](https://github.com/fernphy/pteridocat) (ferns, designed to work with `taxastand`)
+
+- Download CSV, load into R with `read.csv` (may require some additional wrangling)
+
+- Can use `dwctaxon` ([https://github.com/joelnitta/dwctaxon](https://github.com/joelnitta/dwctaxon)) to handle taxonomic data in compliance with Darwin Core
+
+## Name resolution
+
+```{r}
+#| label: resolve
+res <- ts_resolve_names(
+  query = "Gonocormus minutum",
+  ref_taxonomy = filmy_taxonomy,
+  docker = TRUE)
+glimpse(res)
+```
+
+# Example: ferns of Japan
+
+[https://github.com/joelnitta/ja_ferns_names](https://github.com/joelnitta/ja_ferns_names)
+
+## How can we make a map of endangered species of the ferns of Japan?
+
+- [GreenList](https://doi.org/10.5061/dryad.4362p32): Conservation status
+- GBIF: Distribution data
+
+GreenList and GBIF do not use the same taxonomy.
+
+## Solution: match names of both to pteridocat
+
+1. Match GBIF to pteridocat
+2. Match GreenList to pteridocat
+3. Merge GreenList and GBIF
+4. Compare to @Ebihara2019b (non-GBIF data)
+
+## Results
+
+![](images/japan_maps.png){.absolute top=40 left=120 height="650"}
+
+## Unmatched names in GBIF data likely artifacts
+
+Of 1,092 species (331,453 occurrences) in GBIF data,  
+**770** names resolved (302,985 occurrences) to names in Green List
+
+| Match type | *n* |
+| ---------- | --- |
+| Full match | 516 |
+| Difference in punctuation | 196 |
+| Missing author | 22 |
+| Taxonomic rule | 20 |
+| Fuzzy match | 16 |
+| TOTAL | 770 |
+
+# Summary
+
+## `taxastand` allows for reliable, customizable taxonomic resolution
+
+- Main feature: **use of custom taxonomy**
+  - Advantage: can be adapted to different projects
+  - Disadvantage: not simple to prepare/maintain reference db
+
+Please **choose the tool that works best for you**!   
+[see @Grenie2022]
+
+## Acknowledgements

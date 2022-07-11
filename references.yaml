@@ -1,0 +1,82 @@
+references:
+- id: Ebihara2019b
+  author:
+  - family: Ebihara
+    given: Atsushi
+  - family: Nitta
+    given: Joel H.
+  citation-key: Ebihara2019b
+  container-title: Journal of Plant Research
+  container-title-short: J. Plant Res.
+  DOI: 10.1007/s10265-019-01137-3
+  ISSN: '16180860'
+  issue: '6'
+  issued:
+  - year: 2019
+    month: 9
+    day: 16
+  page: 723-738
+  PMID: '31529289'
+  title: <span class="nocase">An update and reassessment of fern and lycophyte diversity
+    data in the Japanese Archipelago</span>
+  type: article-journal
+  volume: '132'
+- id: Grenie2022
+  accessed:
+  - year: 2022
+    month: 4
+    day: 28
+  author:
+  - family: Grenié
+    given: Matthias
+  - family: Berti
+    given: Emilio
+  - family: Carvajal‐Quintero
+    given: Juan
+  - family: Dädlow
+    given: Gala Mona Louise
+  - family: Sagouis
+    given: Alban
+  - family: Winter
+    given: Marten
+  citation-key: Grenie2022
+  container-title: Methods in Ecology and Evolution
+  container-title-short: Methods Ecol Evol
+  DOI: 10.1111/2041-210X.13802
+  ISSN: 2041-210X, 2041-210X
+  issued:
+  - year: 2022
+    month: 2
+    day: 18
+  language: en
+  page: 2041-210X.13802
+  source: DOI.org (Crossref)
+  title: 'Harmonizing taxon names in biodiversity data: A review of tools, databases
+    and best practices'
+  title-short: Harmonizing taxon names in biodiversity data
+  type: article-journal
+  URL: https://onlinelibrary.wiley.com/doi/10.1111/2041-210X.13802
+- id: Page2013
+  accessed:
+  - year: 2022
+    month: 7
+    day: 11
+  author:
+  - family: Page
+    given: Roderic D.M.
+  citation-key: Page2013
+  container-title: PeerJ
+  DOI: 10.7717/peerj.190
+  ISSN: 2167-8359
+  issued:
+  - year: 2013
+    month: 10
+    day: 29
+  language: en
+  page: e190
+  source: DOI.org (Crossref)
+  title: 'BioNames: linking taxonomy, texts, and trees'
+  title-short: BioNames
+  type: article-journal
+  URL: https://peerj.com/articles/190
+  volume: '1'
