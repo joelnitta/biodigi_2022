@@ -145,7 +145,7 @@ head(filmy_taxonomy[c("taxonID", "acceptedNameUsageID",
 
 - Download CSV, load into R with `read.csv` (may require some additional wrangling)
 
-- Can use `dwctaxon` ([https://github.com/joelnitta/dwctaxon](https://github.com/joelnitta/dwctaxon)) to handle taxonomic data in compliance with Darwin Core
+- Use `dwctaxon` ([https://github.com/joelnitta/dwctaxon](https://github.com/joelnitta/dwctaxon)) to handle Darwin Core taxonomic data 
 
 ## Name resolution
 
@@ -162,12 +162,12 @@ glimpse(res)
 
 [https://github.com/joelnitta/ja_ferns_names](https://github.com/joelnitta/ja_ferns_names)
 
-## How can we make a map of endangered species of the ferns of Japan?
+## How can we make a map of endangered fern species in Japan?
 
 - [GreenList](https://doi.org/10.5061/dryad.4362p32): Conservation status
-- GBIF: Distribution data
+- [GBIF](https://doi.org/10.15468/dl.d75p7s): Distribution data
 
-GreenList and GBIF do not use the same taxonomy.
+GreenList and GBIF **do not use the same taxonomy**
 
 ## Solution: match names of both to pteridocat
 
