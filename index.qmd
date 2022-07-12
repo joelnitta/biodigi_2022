@@ -176,22 +176,25 @@ GreenList and GBIF **do not use the same taxonomy**
 3. Merge GreenList and GBIF
 4. Compare to @Ebihara2019b (non-GBIF data)
 
-## Results
+# Results
 
-![](images/japan_maps.png){.absolute top=40 left=120 height="650"}
+## Most names successfully resolved
 
-## Unmatched names in GBIF likely artifacts
-
-Of 1,092 species (331,453 occurrences) in GBIF data,  
-**770** names resolved (302,985 occ.) to names in Green List
+Of 1,092 species in GBIF data,  
+**765** were merged with names in Green List  
+(GL has 727 native, non-hybrid taxa)
 
 | Match type | *n* |
-| ---------- | --- |
-| Full match | 516 |
-| Difference in punctuation | 196 |
-| Missing author | 22 |
-| Taxonomic rule | 20 |
-| Fuzzy match | 16 |
+| -------------------------|--- |
+|Exact                     | 438|
+|Difference in punctuation | 192|
+|Missing author            |  36|
+|Taxonomic rule            |  22|
+|Fuzzy                     |  13|
+
+## Map is close to ground truth
+
+![](images/japan_maps.png){.absolute top=60 left=120 height="650"}
 
 # Summary
 
