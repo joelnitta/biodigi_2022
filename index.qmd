@@ -23,26 +23,15 @@ options(ts_tbl_out = TRUE)
 
 ## Resolving species names rapidly and accurately with `taxastand`
 
-:::: {.columns}
+::: {.medium}
+**Joel Nitta**, Wataru Iwasaki  
+The University of Tokyo  
 
-::: {.column width="50%"}
-
-:::: {.medium}
-**Joel Nitta<sup>1</sup>**, Wataru Iwasaki<sup>1</sup>
-::::
-
-:::: {.small}
-1: The University of Tokyo
 Botany 2022  
 [https://joelnitta.github.io/botany_2022_taxastand](https://joelnitta.github.io/botany_2022_taxastand)
-::::
-
 :::
 
-::: {.column width="50%"}
-:::
-
-::::
+![](images/taxastand_sticker.png){.absolute bottom=20 right=50 height="350"}
 
 ## Species names are the "glue" that connect datasets
 
