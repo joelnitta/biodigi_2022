@@ -16,12 +16,15 @@ format:
 knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
 library(taxastand)
 library(tidyverse)
+library(dwctaxon)
 options(ts_tbl_out = TRUE)
 ```
 
 # Introduction {visibility="hidden"}
 
-## Resolving species names rapidly and accurately with `taxastand`
+## Introducing `taxastand` and `dwctaxon`
+
+### A pair of R packages for standardizing species names in Darwin Core format
 
 ::: {.medium}
 **Joel Nitta**, Wataru Iwasaki  
@@ -94,9 +97,9 @@ remotes::install_github("joelnitta/taxastand")
 library(taxastand)
 ```
 
-Also, need to either install [`taxon-tools`](https://github.com/camwebb/taxon-tools) or Docker
+Also, need to either install [`taxon-tools`](https://github.com/camwebb/taxon-tools) or **Docker**
 
-## Basic matching: fuzzy matching
+## Fuzzy matching
 
 ```{r}
 #| label: basic-matching-fuzzy
@@ -111,7 +114,7 @@ res <- ts_match_names(
 glimpse(res)
 ```
 
-## Basic matching: taxonomic rules
+## Matching based on taxonomic rules
 
 ```{r}
 #| label: basic-matching-rules
@@ -143,9 +146,7 @@ head(filmy_taxonomy[c("taxonID", "acceptedNameUsageID",
   - [ITIS](https://www.itis.gov/)
   - [pteridocat](https://github.com/fernphy/pteridocat) (ferns, designed to work with `taxastand`)
 
-- Download CSV, load into R with `read.csv` (may require some additional wrangling)
-
-- Use `dwctaxon` ([https://github.com/joelnitta/dwctaxon](https://github.com/joelnitta/dwctaxon)) to handle Darwin Core taxonomic data 
+- Download CSV, load into R with `read.csv` (may require some **additional wrangling**, more on that soon...)
 
 ## Name resolution
 
@@ -158,43 +159,126 @@ res <- ts_resolve_names(
 glimpse(res)
 ```
 
-# Example: ferns of Japan
+# `dwctaxon`
 
-[https://github.com/joelnitta/ja_ferns_names](https://github.com/joelnitta/ja_ferns_names)
+https://github.com/joelnitta/dwctaxon
 
-## How can we make a map of endangered fern species in Japan?
+## Goal
 
-- [GreenList](https://doi.org/10.5061/dryad.4362p32): Conservation status
-- [GBIF](https://doi.org/10.15468/dl.d75p7s): Distribution data
+- Enable **simple**, **error-free** editing of DWC taxon data
 
-GreenList and GBIF **do not use the same taxonomy**
+## Example: filmy ferns
 
-## Solution: match names of both to pteridocat
+```{r}
+#| label: dct-change-status-before
+#| eval: false
+filmies <- head(dct_filmies) |>
+  filter(str_detect(scientificName, "crassum|densinervium"))
 
-1. Match GBIF to pteridocat
-2. Match GreenList to pteridocat
-3. Merge GreenList and GBIF
-4. Compare to @Ebihara2019b (non-GBIF data)
+filmies
+```
 
-# Results
+```{r}
+#| label: dct-change-status-before-hide
+#| echo: false
+filmies <- head(dct_filmies) |>
+  filter(str_detect(scientificName, "crassum|densinervium"))
 
-## Most names successfully resolved
+filmies |> 
+  select(-taxonRank)
+```
 
-Of 1,092 species in GBIF data,  
-**765** were merged with names in Green List  
-(GL has 727 native, non-hybrid taxa)
+## Changing taxonomy is complicated {.smaller}
 
-| Match type | *n* |
-| -------------------------|--- |
-|Exact                     | 438|
-|Difference in punctuation | 192|
-|Missing author            |  36|
-|Taxonomic rule            |  22|
-|Fuzzy                     |  13|
+Old version:
 
-## Map is close to ground truth
+- Accepted species 1: *Cephalomanes crassum*
+  - Synonym: *Trichomanes crassum*
+- Accepted species 2: *Cephalomanes densinervium*
+  - Synonym: *Trichomanes densinervium*
 
-![](images/japan_maps.png){.absolute top=60 left=120 height="650"}
+::: {.fragment}
+New version (*C. crassum* → synonym of ***C. densinervium***):
+:::
+
+::: {.incremental}
+- Accepted species: ***Cephalomanes densinervium***
+  - Synonym 1: *Cephalomanes crassum*
+  - Synonym 2: *Trichomanes crassum*
+  - Synonym 3: *Trichomanes densinervium*
+:::
+
+::: {.fragment}
+Need to account for **all** synonyms
+:::
+
+## `dct_change_status()` handles synonym mapping
+
+```{r}
+#| label: dct-change-status-after
+#| eval: false
+dct_change_status(
+  tax_dat = filmies,
+  sci_name = "Cephalomanes crassum (Copel.) M. G. Price",
+  new_status = "synonym",
+  usage_name = "Cephalomanes densinervium (Copel.) Copel."
+)
+```
+
+```{r}
+#| label: dct-change-status-after-hide
+#| echo: false
+dct_change_status(
+  tax_dat = filmies,
+  sci_name = "Cephalomanes crassum (Copel.) M. G. Price",
+  new_status = "synonym",
+  usage_name = "Cephalomanes densinervium (Copel.) Copel."
+) |> 
+  select(-taxonRank, -modified)
+```
+
+## `dct_validate()` checks taxonomic data
+
+```{r}
+#| label: dct-validate
+#| error: true
+#| code-line-numbers: "7"
+dct_change_status(
+  tax_dat = filmies,
+  sci_name = "Trichomanes crassum Copel.",
+  new_status = "synonym",
+  usage_name = "Trichomanes densinervium Copel."
+) |>
+dct_validate()
+```
+
+## Putting it all together (with `|>`)
+
+```{r}
+#| label: pteridocat-example
+#| eval: false
+
+ferns_tax_raw |>
+# Add entry for Dryopteris simasakii var. simasakii autonym
+  dct_add_row(
+    sci_name = "Dryopteris simasakii var. simasakii",
+    taxonomicStatus = "accepted",
+    taxonRank = "variety",
+    parentNameUsageID = "37XPH",
+  ) |>
+  # Change status of Parahemionitis arifolia as indicated by plastome data
+  dct_change_status(
+    sci_name = "Parahemionitis arifolia (Burm. fil.) Panigrahi",
+    new_status = "accepted"
+  ) |>
+  dct_change_status(
+    sci_name = "Hemionitis arifolia (Burm. fil.) T. Moore",
+    new_status = "synonym",
+    usage_name = "Parahemionitis arifolia (Burm. fil.) Panigrahi"
+  ) |>
+  # ... (other changes)
+  dct_validate()
+```
 
 # Summary
 
