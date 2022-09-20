@@ -22,7 +22,7 @@ options(ts_tbl_out = TRUE)
 
 # Introduction {visibility="hidden"}
 
-## Introducing `taxastand` and `dwctaxon`
+## `taxastand` and `dwctaxon`
 
 ### A pair of R packages for standardizing species names in Darwin Core format
 
@@ -30,11 +30,16 @@ options(ts_tbl_out = TRUE)
 **Joel Nitta**, Wataru Iwasaki  
 The University of Tokyo  
 
-Botany 2022  
-[https://joelnitta.github.io/botany_2022_taxastand](https://joelnitta.github.io/botany_2022_taxastand)
+BioDigiCon 2022  
 :::
 
-![](images/taxastand_sticker.png){.absolute bottom=20 right=50 height="350"}
+![](images/taxastand_sticker.png){.absolute bottom=100 right=350 width="300"}
+
+![](images/dwctaxon.png){.absolute bottom=100 right=50 width="300"}
+
+::: {.medium .absolute bottom=30 left=0}
+[https://joelnitta.github.io/biodigi_2022](https://joelnitta.github.io/biodigi_2022)
+:::
 
 ## Species names are the "glue" that connect datasets
 
@@ -99,7 +104,7 @@ library(taxastand)
 
 Also, need to either install [`taxon-tools`](https://github.com/camwebb/taxon-tools) or **Docker**
 
-## Fuzzy matching
+## Name matching
 
 ```{r}
 #| label: basic-matching-fuzzy
@@ -138,16 +143,6 @@ head(filmy_taxonomy[c("taxonID", "acceptedNameUsageID",
   "taxonomicStatus", "scientificName")])
 ```
 
-## Where to get taxonomic data?
-
-- Any dataframe following [Darwin Core standards](https://dwc.tdwg.org/)
-  - [Catalog of Life](http://www.catalogueoflife.org/)
-  - [GBIF](https://www.gbif.org/en/dataset/d7dddbf4-2cf0-4f39-9b2a-bb099caae36c)
-  - [ITIS](https://www.itis.gov/)
-  - [pteridocat](https://github.com/fernphy/pteridocat) (ferns, designed to work with `taxastand`)
-
-- Download CSV, load into R with `read.csv` (may require some **additional wrangling**, more on that soon...)
-
 ## Name resolution
 
 ```{r}
@@ -159,13 +154,11 @@ res <- ts_resolve_names(
 glimpse(res)
 ```
 
-# `dwctaxon`
+## `dwctaxon`
 
-https://github.com/joelnitta/dwctaxon
+- Goal: enable **simple**, **error-free** editing of DWC taxon data
 
-## Goal
-
-- Enable **simple**, **error-free** editing of DWC taxon data
+- Available at [https://github.com/joelnitta/dwctaxon](https://github.com/joelnitta/dwctaxon)
 
 ## Example: filmy ferns
 
@@ -217,6 +210,7 @@ Need to account for **all** synonyms
 ```{r}
 #| label: dct-change-status-after
 #| eval: false
+# C. crassum → synonym of C. densinervium
 dct_change_status(
   tax_dat = filmies,
   sci_name = "Cephalomanes crassum (Copel.) M. G. Price",
@@ -280,16 +274,20 @@ ferns_tax_raw |>
   dct_validate()
 ```
 
+Example: [https://github.com/fernphy/pteridocat](https://github.com/fernphy/pteridocat)
+
 # Summary
 
-## `taxastand` allows for reliable, customizable taxonomic resolution
+## `taxastand` + `dwctaxon`: flexible taxonomic standardization
 
-- Main feature: **use of custom taxonomy**
-  - Advantage: can be adapted to different projects
-  - Disadvantage: not simple to prepare/maintain reference db
+- `taxastand`: accurate, customizable taxonomic resolution
 
-Please **choose the tool that works best for you**!   
-[see @Grenie2022]
+- `dwctaxon`: maintenance of DWC-compliant taxonomic database
+
+::: {.fragment}
+Not all researchers need this (standard databases may be fine)
+- Please **choose the tool that works best for you**! [see @Grenie2022]
+:::
 
 ## Acknowledgements
 
