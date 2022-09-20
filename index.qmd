@@ -285,8 +285,11 @@ Example: [https://github.com/fernphy/pteridocat](https://github.com/fernphy/pter
 - `dwctaxon`: maintenance of DWC-compliant taxonomic database
 
 ::: {.fragment}
+
 Not all researchers need this (standard databases may be fine)
+
 - Please **choose the tool that works best for you**! [see @Grenie2022]
+
 :::
 
 ## Acknowledgements
