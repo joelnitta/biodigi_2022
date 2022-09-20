@@ -1,8 +1,8 @@
-# botany_2022_taxastand
+# biodigi_2022
 
-Slides for [Botany 2022](https://2022.botanyconference.org/) presentation, "Resolving species names rapidly and accurately with the taxastand R package" by Nitta et al.
+Slides for [BioDigiCon 2022](https://www.idigbio.org/content/biodigicon-2022) presentation, "taxastand and dwctaxon: A pair of R packages for standardizing species names in Darwin Core format" by Nitta et al.
 
-Rendered slides are here: https://joelnitta.github.io/botany_2022_taxastand/
+Rendered slides are here: https://joelnitta.github.io/biodigi_2022/
 
 ## License
 
